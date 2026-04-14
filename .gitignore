@@ -1,0 +1,10 @@
+
+backend/mail/.env
+backend/mail/node_modules
+backend/mail/dist
+
+backend/user/.env
+backend/user/node_modules
+backend/user/dist
+
+
