@@ -24,17 +24,25 @@ export const startSendOtpConsumer = async () => {
 
             try {
                const {to,subject,body} = JSON.parse(message.content.toString());
+               const smtpUser = process.env.EMAIL_USER ?? process.env.USER;
+               const smtpPass = process.env.EMAIL_PASS ?? process.env.PASS;
+
+               if (!smtpUser || !smtpPass) {
+                throw new Error("Missing SMTP credentials. Set EMAIL_USER/EMAIL_PASS or USER/PASS in mail .env");
+               }
+
                const transporter = nodemailer.createTransport({
-                host: "smtp@gmail.com",
+                host: "smtp.gmail.com",
                 port: 465,
+                secure: true,
                 auth:{
-                    user: process.env.EMAIL_USER,
-                    pass: process.env.EMAIL_PASS,
+                    user: smtpUser,
+                    pass: smtpPass,
                 }
                 
                })
                await transporter.sendMail({
-                from: process.env.EMAIL_USER,
+                from: smtpUser,
                 to,
                 subject,
                 text: body,
