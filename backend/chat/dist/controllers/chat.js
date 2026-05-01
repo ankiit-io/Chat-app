@@ -71,7 +71,66 @@ export const getAllChats = tryCatch(async (req, res) => {
 export const sendMessage = tryCatch(async (req, res) => {
     const senderId = req.user;
     const { chatId, text } = req.body;
-    consst;
-    imageFile = req.file;
+    const imageFile = req.file;
+    if (!senderId) {
+        res.status(401).json({ message: "Unauthorized" });
+        return;
+    }
+    if (!chatId) {
+        res.status(400).json({ message: "Chat id is required" });
+        return;
+    }
+    if (!text && !imageFile) {
+        res.status(400).json({ message: "Message text or image is required" });
+        return;
+    }
+    const chat = await Chat.findById(chatId);
+    if (!chat) {
+        res.status(404).json({ message: "Chat not found" });
+        return;
+    }
+    const isUserInChat = chat.users.some((userId) => userId.toString() === senderId.toString());
+    if (!isUserInChat) {
+        res.status(403).json({ message: "You are not a participant of this chat" });
+        return;
+    }
+    const otherUserId = chat.users.find((userId) => userId.toString() !== senderId.toString());
+    if (!otherUserId) {
+        res.status(401).json({ message: "No other User" });
+        return;
+    }
+    //socket setup
+    let messageData = {
+        chatId: chatId,
+        sender: senderId,
+        seen: false,
+        seenAt: undefined,
+    };
+    if (imageFile) {
+        messageData.image = {
+            url: imageFile.path,
+            filename: imageFile.filename,
+        };
+        messageData.text = text || "";
+        messageData.type = "image";
+    }
+    else {
+        messageData.text = text;
+        messageData.type = "text";
+    }
+    const message = new Messages(messageData);
+    const savedMessage = await message.save();
+    const latestMessageText = imageFile ? "Sent an image 📸" : text;
+    await Chat.findByIdAndUpdate(chatId, { latestmessage: {
+            text: latestMessageText,
+            sender: senderId,
+        },
+        updatedAt: new Date(),
+    }, { new: true });
+    //emit to sockets
+    res.status(201).json({
+        message: savedMessage,
+        sender: senderId,
+    });
 });
 //# sourceMappingURL=chat.js.map

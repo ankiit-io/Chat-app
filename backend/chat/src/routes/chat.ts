@@ -8,6 +8,6 @@ const router = express.Router();
 
 router.post("/chat/new", isAuth, createChat);
 router.get("/chat/all", isAuth, getAllChats);
-router.post("/chat/send", isAuth,upload.single('image') ,sendMessage);
+router.post("/message", isAuth,upload.single('image') ,sendMessage);
 
 export default router;
