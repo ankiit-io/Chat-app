@@ -2,7 +2,7 @@
 
 import axios from "axios";
 import { createContext, ReactNode, useContext, useEffect, useState } from "react";
-
+import { Toaster } from "react-hot-toast";
 export const user_Service = "http://localhost:5000";
 export const chat_Service = "http://localhost:5002";
 
@@ -90,7 +90,9 @@ export const AppProvider: React.FC<AppProviderProps> = ({children})=>{
     },[]);
 
 
-    return <AppContext.Provider value={{user,loading,isAuth,setUser,setIsAuth}}>{children}</AppContext.Provider>;
+    return <AppContext.Provider value={{user,loading,isAuth,setUser,setIsAuth}}>{children}
+    <Toaster />
+    </AppContext.Provider>;
 }
 
 export const useAppData = (): AppContextType => {

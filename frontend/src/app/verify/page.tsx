@@ -1,11 +1,15 @@
+import Loading from '@/components/Loading';
 import VerifyOtp from '@/components/verifyOtp'
 import { Verify } from 'crypto'
-import React from 'react'
+import React, { Suspense } from 'react'
 
 const VerifyPage = () => {
+  
   return (
-   <VerifyOtp/>
-  )
+    <Suspense fallback={<Loading />}>
+      <VerifyOtp />
+    </Suspense>
+  );
 }
 
 export default VerifyPage

@@ -1,10 +1,13 @@
 "use client"
-import { user_Service } from '@/context/AppContext';
+import { useAppData, user_Service } from '@/context/AppContext';
 import axios from 'axios';
 import { ArrowRight, ChevronLeft, Loader2, Mail } from 'lucide-react';
-import { useRouter, useSearchParams } from 'next/navigation';
+import { redirect, useRouter, useSearchParams } from 'next/navigation';
 import React, { useEffect, useState } from 'react'
+import Loading from './Loading';
+import { toast } from 'react-hot-toast';
 const verifyOtp = () => {
+    const {isAuth,setIsAuth,setUser,loading:userLoading} = useAppData();   
     const [loading, setLoading] = React.useState(false);
     const searchParams = useSearchParams();
     const email = searchParams.get('email') || '';
@@ -80,15 +83,23 @@ const verifyOtp = () => {
                 email,
                 otp: otpString
             });
-            alert(data.message);
+            toast.success(data.message);
             
            document.cookie = `token=${data.token}; path=/; max-age=${15 * 24 * 60 * 60}`;
 
-           // MUST BE THIS
-           window.location.href = "/";
-           
+           toast.success(data.message);
+
+           document.cookie = `token=${data.token}; path=/; max-age=${15 * 24 * 60 * 60}`;
+
+           // wait before redirect
+           setTimeout(() => {
+             window.location.href = "/";
+           }, 1500);
+
            SetOtp(["","","","","",""]); 
            inputRefs.current[0]?.focus();
+           setUser(data.user);  
+           setIsAuth(true); 
         } catch (error:any) {
            setError(error.response.data.message || "Something went wrong");
         }
@@ -106,14 +117,16 @@ const verifyOtp = () => {
             `${user_Service}/api/v1/login`,
             { email },
           );
-          alert(data.message);
+          toast.success(data.message);
           SetTimer(60);
         } catch (error: any) {
           setError(error.response.data.message || "Something went wrong");
         } finally {
           setResendLoading(false);
         }
-    }
+    };
+    if(userLoading) return <Loading />
+    if(isAuth) redirect("/chat");  
   return (
     <div className="min-h-screen bg-gray-900 flex items-center justify-center p-4">
       <div className="max-w-md w-full">
@@ -153,9 +166,9 @@ const verifyOtp = () => {
                     onChange={(e) => handleInputChange(index, e.target.value)}
                     onKeyDown={(e) => handleKeyDown(index, e)}
                     onPaste={index === 0 ? handlePaste : undefined}
-                    ref={(el: HTMLInputElement | null) =>
-                      (inputRefs.current[index] = el)
-                    }
+                    ref={(el) => {
+                      inputRefs.current[index] = el;
+                    }}
                     className="w-12 h-12 rounded- borde border-gray-600  bg-gray-700 text-center text-xl rounded-lg text-white font-bold focus:outline-none"
                   />
                 ))}
