@@ -1,4 +1,5 @@
 "use client"
+import { user_Service } from '@/context/AppContext';
 import axios from 'axios';
 import { ArrowRight, ChevronLeft, Loader2, Mail } from 'lucide-react';
 import { useRouter, useSearchParams } from 'next/navigation';
@@ -75,14 +76,17 @@ const verifyOtp = () => {
         setError("");
         setLoading(true);
         try {
-            const {data} = await axios.post("http://localhost:5000/api/v1/verify",{
+            const {data} = await axios.post(`${user_Service}/api/v1/verify`,{
                 email,
                 otp: otpString
             });
             alert(data.message);
             
-            document.cookie = `token=${data.token}; path=/; max-age=${15 * 24 * 60 * 60}`;
+           document.cookie = `token=${data.token}; path=/; max-age=${15 * 24 * 60 * 60}`;
 
+           // MUST BE THIS
+           window.location.href = "/";
+           
            SetOtp(["","","","","",""]); 
            inputRefs.current[0]?.focus();
         } catch (error:any) {
@@ -99,7 +103,7 @@ const verifyOtp = () => {
         
         try {
           const { data } = await axios.post(
-            "http://localhost:5000/api/v1/login",
+            `${user_Service}/api/v1/login`,
             { email },
           );
           alert(data.message);
