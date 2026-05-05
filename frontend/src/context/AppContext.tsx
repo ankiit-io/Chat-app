@@ -1,8 +1,9 @@
 "use client"
 
 import axios from "axios";
+import Cookies from "js-cookie";
 import { createContext, ReactNode, useContext, useEffect, useState } from "react";
-import { Toaster } from "react-hot-toast";
+import toast, { Toaster } from "react-hot-toast";
 export const user_Service = "http://localhost:5000";
 export const chat_Service = "http://localhost:5002";
 
@@ -85,8 +86,32 @@ export const AppProvider: React.FC<AppProviderProps> = ({children})=>{
     }
   }
 
+  async function logout() {   
+    Cookies.remove("token");
+    setUser(null);
+    setIsAuth(false);
+    toast.success("Logged out successfully");
+  }
+
+const [chats,setChats] = useState<chats[] | null >(null);
+
+  async function fetchChats() {
+   const token = Cookies.get("token");
+    try {
+      const {data} = await axios.get(`${chat_Service}/api/v1/chat/all`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+      setChats(data.chats);
+    } catch (error) {
+      console.log("FETCH CHATS ERROR:", error);
+    }
+  }
+
     useEffect(()=>{
         fetchUser();
+        fetchChats();
     },[]);
 
 
