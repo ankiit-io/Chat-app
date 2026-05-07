@@ -5,9 +5,10 @@ import { ArrowRight, ChevronLeft, Loader2, Mail } from 'lucide-react';
 import { redirect, useRouter, useSearchParams } from 'next/navigation';
 import React, { useEffect, useState } from 'react'
 import Loading from './Loading';
+import Cookies from "js-cookie";  
 import { toast } from 'react-hot-toast';
 const verifyOtp = () => {
-    const {isAuth,setIsAuth,setUser,loading:userLoading} = useAppData();   
+    const {isAuth,setIsAuth,setUser,loading:userLoading,fetchChats,fetchUsers} = useAppData();   
     const [loading, setLoading] = React.useState(false);
     const searchParams = useSearchParams();
     const email = searchParams.get('email') || '';
@@ -85,12 +86,11 @@ const verifyOtp = () => {
             });
             toast.success(data.message);
             
-           document.cookie = `token=${data.token}; path=/; max-age=${15 * 24 * 60 * 60}`;
-
-           toast.success(data.message);
-
-           document.cookie = `token=${data.token}; path=/; max-age=${15 * 24 * 60 * 60}`;
-
+           Cookies.set("token",data.token,{
+            expires: 15,
+            secure: false,
+            path: "/",
+           });
            // wait before redirect
            setTimeout(() => {
              window.location.href = "/";
@@ -99,7 +99,9 @@ const verifyOtp = () => {
            SetOtp(["","","","","",""]); 
            inputRefs.current[0]?.focus();
            setUser(data.user);  
-           setIsAuth(true); 
+           setIsAuth(true);
+           fetchChats();
+           fetchUsers(); 
         } catch (error:any) {
            setError(error.response.data.message || "Something went wrong");
         }
