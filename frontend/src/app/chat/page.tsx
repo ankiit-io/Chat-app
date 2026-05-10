@@ -1,5 +1,5 @@
 "use client";
-import ChatSidebar from '@/components/chatSidebar';
+import ChatSidebar from '@/components/ChatSidebar';
 import Loading from '@/components/Loading';
 import { useAppData,user } from '@/context/AppContext';
 import { useRouter } from 'next/dist/client/components/navigation';
@@ -41,7 +41,7 @@ const app = () => {
   
   return (
     <div className='flex min-h-screen text-white relative overflow-hidden bg-gray-900 '>
-       <ChatSidebar sidebarOpen={sidebarOpen}/> 
+       <ChatSidebar sidebarOpen={sidebarOpen} setSidebarOpen={setSidebarOpen} selectedUser={selectedUser} setSelectedUser={setSelectedUser} users={users} loggedInUser={loggedInUser} chats={chats} showAllUsers={showAllUsers} setShowAllUsers={setShowAllUsers} handleLogout={logout} /> 
     </div>
   )
 }
