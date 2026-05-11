@@ -7,9 +7,10 @@ import {
   UserCircle,
   CornerUpLeft,
   CornerDownRight,
+  LogOut,
 } from "lucide-react";
 import React, { useState } from "react";
-
+import Link from "next/link";
 interface chatSidebarProps {
   sidebarOpen: boolean;
   setSidebarOpen: (open: boolean) => void;
@@ -21,6 +22,7 @@ interface chatSidebarProps {
   selectedUser: string | null;
   setSelectedUser: (userId: string | null) => void;
   handleLogout: () => Promise<void>;
+  createChat: (u:user) => void;
 }
 
 const ChatSidebar = ({
@@ -33,9 +35,12 @@ const ChatSidebar = ({
   chats,
   selectedUser,
   setSelectedUser,
+  handleLogout,
+  createChat,
 }: chatSidebarProps) => {
   const [searchQuery, setSearchQuery] = useState("");
 
+  
   return (
     <aside
       className={`fixed z-20 sm:static top-0 left-0 h-screen w-80 bg-gray-900 border-r border-gray-700 transform ${
@@ -112,10 +117,7 @@ const ChatSidebar = ({
                 .map((u) => (
                   <button
                     key={u._id}
-                    onClick={() => {
-                      setSelectedUser(u._id);
-                      setSidebarOpen(false);
-                    }}
+                    onClick={() => createChat(u)}
                     className="w-full text-left p-4 rounded-xl border border-gray-700 hover:border-gray-600 hover:bg-gray-800 transition-all duration-200"
                   >
                     <div className="flex items-center gap-3">
@@ -210,10 +212,39 @@ const ChatSidebar = ({
             })}
           </div>
         ) : (
-          <div className="h-full flex items-center justify-center text-gray-400">
-            No chats found
+          <div className="h-full flex flex-col items-center justify-center text-center ">
+            <div className="p-4 bg-gray-800 rounded-full mb-4">
+              <MessageCircle className="w-8 h-8 text-gray-400" />
+            </div>
+            <p className="font-medium text-gray-400">No chats found</p>
+            <p className="text-sm text-gray-500 mt-1">
+              Start a new conversation
+            </p>
           </div>
         )}
+      </div>
+
+      {/* Footer */}
+      <div className="p-4 border-t border-gray-700 space-y-2">
+        <Link
+          href={`/profile`}
+          className="flex items-center gap-3 px-4 py-3 rounded-lg hover:bg-gray-800 transition-colors duration-200"
+        >
+          <div className="p-1.5 bg-gray-700 rounded-lg">
+            <UserCircle className="w-4 h-4 text-gray-300" />
+          </div>
+          <span className="font-medium text-gray-300">Profile</span>
+        </Link>
+        <button
+          onClick={handleLogout}
+          className="group w-full flex items-center gap-3 px-4 py-3 rounded-lg hover:bg-red-600 text-red-500 hover:text-white transition-colors duration-200"
+        >
+          <div className="p-1.5 bg-red-500 group-hover:bg-gray-700 rounded-lg transition-colors duration-200">
+            <LogOut className="w-4 h-4 text-gray-200" />
+          </div>
+
+          <span className="font-medium">Logout</span>
+        </button>
       </div>
     </aside>
   );
