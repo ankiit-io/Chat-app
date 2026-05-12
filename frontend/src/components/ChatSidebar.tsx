@@ -1,4 +1,4 @@
-import { chats, user } from "@/context/AppContext";
+import { chats, User } from "@/context/AppContext";
 import {
   MessageCircle,
   X,
@@ -16,13 +16,13 @@ interface chatSidebarProps {
   setSidebarOpen: (open: boolean) => void;
   showAllUsers: boolean;
   setShowAllUsers: (show: boolean | ((prevState: boolean) => boolean)) => void;
-  users: user[] | null;
-  loggedInUser: user | null;
+  users: User[] | null;
+  loggedInUser: User | null;
   chats: chats[] | null;
   selectedUser: string | null;
   setSelectedUser: (userId: string | null) => void;
   handleLogout: () => Promise<void>;
-  createChat: (u:user) => void;
+  createChat: (u:User) => void;
 }
 
 const ChatSidebar = ({

@@ -8,7 +8,7 @@ export const user_Service = "http://localhost:5000";
 export const chat_Service = "http://localhost:5002";
 
 
-export interface user{
+export interface User{
     _id:string;
     email:string;
     name:string;
@@ -28,21 +28,21 @@ export interface chat{
 
 export interface chats{
     _id:string;
-    user:user;
+    user:User;
     chat:chat;
 }
 
 interface AppContextType{
-    user:user | null;
+    user:User | null;
     loading:boolean;
     isAuth:boolean;
-    setUser:React.Dispatch<React.SetStateAction<user | null>>;
+    setUser:React.Dispatch<React.SetStateAction<User | null>>;
     setIsAuth:React.Dispatch<React.SetStateAction<boolean>>;
     logout:()=>Promise<void>;
     fetchUsers:()=>Promise<void>;
     fetchChats:()=>Promise<void>;
     chats:chats[] | null;
-    users:user | null;
+    users:User[] | null;
     setChats:React.Dispatch<React.SetStateAction<chats[] | null>>;
 }
 
@@ -53,7 +53,7 @@ interface AppProviderProps{
 }
 
 export const AppProvider: React.FC<AppProviderProps> = ({children})=>{
-    const [user,setUser] = useState<user | null>(null);
+    const [user,setUser] = useState<User | null>(null);
     const [isAuth,setIsAuth] =useState<boolean>(false);
     const [loading,setLoading] = useState<boolean>(false);
 
@@ -115,7 +115,7 @@ const [chats,setChats] = useState<chats[] | null >(null);
     }
   }
 
-  const [users,setUsers] = useState<user | null>(null);
+  const [users,setUsers] = useState<User[] | null>(null);
   
   async function fetchUsers() {
     const token = Cookies.get("token");

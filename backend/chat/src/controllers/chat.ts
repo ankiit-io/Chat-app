@@ -58,7 +58,7 @@ export const getAllChats = tryCatch(async(req:AuthenticatedRequest, res) => {
 
     try {
       const {data} = await axios.get(
-        `${process.env.USER_SERVICE_URL}/api/v1/users/${otherUserId}`
+        `${process.env.USER_SERVICE_URL}/api/v1/user/${otherUserId}`
       );
       return{
         user:data,
@@ -220,7 +220,7 @@ export const getMessagesByChat = tryCatch(async(req:AuthenticatedRequest, res) =
 
   try {
     const { data } = await axios.get(
-      `${process.env.USER_SERVICE_URL}/api/v1/users/${otherUserId}`
+      `${process.env.USER_SERVICE_URL}/api/v1/user/${otherUserId}`
     );
     if(!otherUserId){
       res.status(404).json({ message: "Other user not found" });

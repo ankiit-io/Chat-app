@@ -42,7 +42,7 @@ export const getAllChats = tryCatch(async (req, res) => {
             sender: { $ne: userId }
         });
         try {
-            const { data } = await axios.get(`${process.env.USER_SERVICE_URL}/api/v1/users/${otherUserId}`);
+            const { data } = await axios.get(`${process.env.USER_SERVICE_URL}/api/v1/user/${otherUserId}`);
             return {
                 user: data,
                 chat: {
@@ -170,7 +170,7 @@ export const getMessagesByChat = tryCatch(async (req, res) => {
     const messages = await Messages.find({ chatId }).sort({ createdAt: 1 });
     const otherUserId = chat.users.find((id) => id.toString() !== userId.toString());
     try {
-        const { data } = await axios.get(`${process.env.USER_SERVICE_URL}/api/v1/users/${otherUserId}`);
+        const { data } = await axios.get(`${process.env.USER_SERVICE_URL}/api/v1/user/${otherUserId}`);
         if (!otherUserId) {
             res.status(404).json({ message: "Other user not found" });
             return;
