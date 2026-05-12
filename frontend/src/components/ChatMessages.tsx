@@ -35,45 +35,51 @@ const ChatMessages = ({ selectedUser, messages, loggedInUser }:ChatMessagesProps
                      const isSentByMe = e.sender === loggedInUser?._id;
                      const uniqueKey = `${e._id}-${i}`;
                         return (
-                            <div className={`flex flex-col gap-1 mt-2 ${isSentByMe ? 'items-end' : 'items-start'}`} key={uniqueKey}>
-                                <div className={`rounded-lg p-3 max-w-sm ${isSentByMe ? 'bg-blue-600 text-white' : 'bg-gray-700 text-white'}`}>
-                               {
-                                e.messageType === "image" && e.image && (
-                                    <div className="relative group ">
-                                        <img src={e.image.url} alt="shared image" className="max-w-full h-auto rounded-lg cursor-pointer" />
-                                    </div>
-                                )
-
-    
-                               }
-                               {
-                                e.text && <p className="mt-1">{e.text}</p>
-                               }
-                                </div>
-                                <div className={`flex items-center gap-1 text-xs text-gray-400 ${isSentByMe ? 'pr-2 flex-row-reverse' : 'pl-2'}`}>
-                                    <span>{moment(e.createdAt).format('hh:mm A . MMM D')}</span>
-                                    {
-                                        isSentByMe && 
-                                        <div className="flex  items-center ml-1">
-                                            {
-                                                e.seen? 
-                                                <div className="flex items-center gap-1 text-blue-400" >
-                                                    <CheckCheck className="w-4 h-4" />
-                                                {
-                                                    e.seenAt && <span className="text-xs text-gray-400">{moment(e.seenAt).format('hh:mm A')}</span>
-                                                }
-                                                </div>
-                                                :
-                                                <Check className="w-4 h-4 text-gray-400" />
-
-                                            }
-                                        
-                                        </div>
-                                            
-                                    }
-                                </div>
+                          <div
+                            className={`flex flex-col gap-1 mt-2 ${isSentByMe ? "items-end" : "items-start"}`}
+                            key={uniqueKey}
+                          >
+                            <div
+                              className={`rounded-lg p-3 max-w-sm ${isSentByMe ? "bg-blue-600 text-white" : "bg-gray-700 text-white"}`}
+                            >
+                              {(e.messageType === "image" ||
+                                (e as any).type === "image") &&
+                                e.image && (
+                                  <div className="relative group">
+                                    <img
+                                      src={e.image.url}
+                                      alt="shared image"
+                                      className="max-w-full h-auto rounded-lg cursor-pointer"
+                                    />
+                                  </div>
+                                )}
+                              {e.text && <p className="mt-1">{e.text}</p>}
                             </div>
-                        )
+                            <div
+                              className={`flex items-center gap-1 text-xs text-gray-400 ${isSentByMe ? "pr-2 flex-row-reverse" : "pl-2"}`}
+                            >
+                              <span>
+                                {moment(e.createdAt).format("hh:mm A . MMM D")}
+                              </span>
+                              {isSentByMe && (
+                                <div className="flex  items-center ml-1">
+                                  {e.seen ? (
+                                    <div className="flex items-center gap-1 text-blue-400">
+                                      <CheckCheck className="w-4 h-4" />
+                                      {e.seenAt && (
+                                        <span className="text-xs text-gray-400">
+                                          {moment(e.seenAt).format("hh:mm A")}
+                                        </span>
+                                      )}
+                                    </div>
+                                  ) : (
+                                    <Check className="w-4 h-4 text-gray-400" />
+                                  )}
+                                </div>
+                              )}
+                            </div>
+                          </div>
+                        );
                     })
                 }
                 <div className="" ref={bottomRef}/>

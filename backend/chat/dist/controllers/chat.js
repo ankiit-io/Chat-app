@@ -112,11 +112,11 @@ export const sendMessage = tryCatch(async (req, res) => {
             filename: imageFile.filename,
         };
         messageData.text = text || "";
-        messageData.type = "image";
+        messageData.messageType = "image";
     }
     else {
         messageData.text = text;
-        messageData.type = "text";
+        messageData.messageType = "text";
     }
     const message = new Messages(messageData);
     const savedMessage = await message.save();
