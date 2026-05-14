@@ -2,11 +2,11 @@ import { Loader2, Paperclip, Send, X } from 'lucide-react';
 import React, { useState } from 'react'
 
 interface MessageInputProps {
-    selectedUser: string | null;
-    message: string;
-    setMessage: (message: string) => void;
-    handleMessageSend: (e:any,imageFile?:File | null) => void;
-    handleTyping: () => void;
+  selectedUser: string | null;
+  message: string;
+  setMessage: (message: string) => void;
+  handleMessageSend: (e: any, imageFile?: File | null) => void;
+  handleTyping: (value: string) => void;
 }
 const MessageInput = ({selectedUser,message,setMessage,handleMessageSend,handleTyping}:MessageInputProps) => {
   const[imageFile,setImageFile] = useState<File | null>(null);
@@ -71,8 +71,7 @@ const MessageInput = ({selectedUser,message,setMessage,handleMessageSend,handleT
           placeholder={imageFile ? "Add a caption... " : "Type a message"}
           className="flex-1 placeholder:gray-400 bg-gray-700 rounded-lg py-2 px-4 text-white focus:outline-none"
           value={message}
-          onChange={(e) => setMessage(e.target.value)}
-          
+          onChange={(e) => handleTyping(e.target.value)}
         />
         <button
           type="submit"
