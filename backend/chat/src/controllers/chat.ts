@@ -45,16 +45,16 @@ export const getAllChats = tryCatch(async(req:AuthenticatedRequest, res) => {
     return;
   }
 
-  const chats = await Chat.find({ users: userId }).sort({updatedAt: -1});
+  const chats = await Chat.find({ users: userId as any }).sort({updatedAt: -1});
 
   const chatsWithUserData = await Promise.all
   (chats.map(async (chat) => {
-    const otherUserId = chat.users.find((id) => id !== userId);
+    const otherUserId = chat.users.find((id) => id !== (userId as any));
 
     const unseenCount = await Messages.countDocuments({
         chatId: chat._id,
         seen: false,
-        sender: { $ne: userId }
+        sender: { $ne: userId as any }
     });
 
     try {
@@ -229,13 +229,13 @@ export const getMessagesByChat = tryCatch(async(req:AuthenticatedRequest, res) =
   const messagesToMarkSeen = await Messages.find({
     chatId: chatId,
     seen: false,
-    sender: { $ne: userId }
+    sender: { $ne: userId as any }
   });
 
   await Messages.updateMany({
     chatId: chatId,
     seen: false,
-    sender: { $ne: userId }
+    sender: { $ne: userId as any}
   }, {
     seen: true,
     seenAt: new Date()
