@@ -3,6 +3,8 @@
   "compilerOptions": {
     // File Layout
     "rootDir": "./src",
+    "strict": false,
+    "skipLibCheck": true,
     "outDir": "./dist",
 
     // Environment Settings

@@ -145,7 +145,7 @@ export const sendMessage = tryCatch(async(req:AuthenticatedRequest, res) => {
     chatId: chatId,
     sender: senderId,
     seen: isRecieverInChatRoom ? true : false,
-    seenAt: isRecieverInChatRoom ? new Date() : undefinedc,
+    seenAt: isRecieverInChatRoom ? new Date() : undefined,
   };
 
   if(imageFile){
