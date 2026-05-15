@@ -3,10 +3,10 @@ import { useAppData, user_Service } from '@/context/AppContext';
 import { useRouter } from 'next/dist/client/components/navigation';
 import React, { useEffect, useState } from 'react'
 import Cookies from 'js-cookie';   
-import axios from 'axios';
-import { toast } from 'react-hot-toast/headless';
+import axios, { CanceledError } from 'axios';
+import { toast } from 'react-hot-toast';
 import Loading from '@/components/Loading';
-import { ArrowLeft } from 'lucide-react';
+import { ArrowLeft, Cross, Save, User, UserCircle, X } from 'lucide-react';
 const ProfilePage = () => {
     const {user,isAuth,loading,setUser} = useAppData();
     const [isEdit, setisEdit] = useState(false);
@@ -20,7 +20,7 @@ const ProfilePage = () => {
     e.preventDefault()
     const token = Cookies.get("token");
     try{
-        const {data} = await axios.post(`${user_Service}/api/v1/update/name`,{name},{
+        const {data} = await axios.post(`${user_Service}/api/v1/update-name/user`,{name},{
             headers:{
                 Authorization: `Bearer ${token}`,
             }
@@ -47,16 +47,77 @@ const ProfilePage = () => {
 
     if(loading) return <Loading/>
     return (
-    <div className="min-h-screen bg-gray-900 p-4">
-      <div className="max-w-2xl mx-auto pt-8">
-        <div className="flex items-center gap-4 mb-8">
-           <button className="bg-gray-8k00 hover:bg-gray-700 text-white font-bold py-2 px-4 rounded" onClick={()=>router.push("/chat")}>
-            <ArrowLeft className="w-5 h-5 text-gray-300" />
-           </button>
+      <div className="min-h-screen bg-gray-900 p-4">
+        <div className="max-w-2xl mx-auto pt-8">
+          <div className="flex items-center gap-4 mb-8">
+            <button
+              className="p-3 bg-gray-800 hover:bg-gray-700 text-white border border-gray-700 font-bold py-2 px-4 rounded-lg"
+              onClick={() => router.push("/chat")}
+            >
+              <ArrowLeft className="w-5 h-5 text-gray-300" />
+            </button>
+            <div>
+              <h1 className="text-3xl font-bold text-white">
+                Profile Settings
+              </h1>
+              <p className="text-gray-400 mt-1">
+                Manage your account information
+              </p>
+            </div>
+          </div>
+          <div className="bg-gray-800 rounded-lg border border-gray-700 shadow-lg ">
+            <div className="bg-gray-700 p-8 border-b border-gray-600">
+              <div className="flex items-center gap-6">
+                <div className="relative">
+                  <div className="w-20 h-20 rounded-full bg-gray-600 hover:bg-gradient-to-r from-slate-900 to-slate-700  hover:cursor-pointer flex items-center justify-center">
+                    <UserCircle className="w-12 h-12 text-gray-400  " />
+                  </div>
+                  <div className="absolute top-0 right-0 w-6 h-6 hover:bg-gradient-to-r from-slate-700 to-slate-900 bg-green-500 rounded-full border-2 border-gray-800"></div>
+                </div>
+                <div className="flex-1">
+                    <h2 className="text-2xl font-bold text-white">{user?.name || "User"}</h2>
+                    <p className="text-gray-300 text-sm">Active Now</p>
+                </div>
+              </div>
+            </div>
+            <div className="p-8 ">
+                <div className="space-y-6">
+                    <div className="">
+                        <label className='block text-sm font-semibold text-gray-300 mb-3 '>
+                            Display Name
+                        </label>
+                        {
+                            isEdit ? (
+                                <form onSubmit={submitHandler} className="space-y-4">
+                                    <div className="relative ">
+                                        <input type="text" value={name} onChange={(e) => setName(e.target.value)} className="w-full px-4 py03 bg-gray-700 border border-gray-600 rounded-lg text-white placeholder-gray-400" placeholder="Enter your display name" />
+                                        <User className="absolute top-1/2 right-3 transform -translate-y-1/2 w-5 h-5 text-gray-400" />
+                                    </div>
+                                <div className="flex gap-3">
+                                    <button type="submit" className="flex items-center gap-2 px-6 py-3 bg-blue-600 hover:bg-blue-700 text-white font-semibold rounded-lg ">
+                                        <Save className="w-5 h-5" />
+                                        Save Changes
+                                    </button>
+                                    <button type="button" onClick={editHandler} className="px-6 py-3 bg-gray-600 hover:bg-gray-700 text-white font-semibold rounded-lg">
+                                        <X className="w-5 h-5" />
+                                    </button>
+                                </div>
+                                </form>
+                            ) : <div className="flex items-center justify-between p-4 bg-gray-700 rounded-lg border border-gray-600">
+                                <span className="text-lg text-white font-medium">{user?.name || "Not set"}</span>
+                                <button onClick={editHandler} className="px-4 py-2 bg-gray-600 hover:bg-gray-700 text-white font-semibold rounded-lg">
+                                    Edit
+                                </button>
+                 
+                            </div>
+                        }
+                    </div>
+                </div>
+            </div>
+          </div>
         </div>
       </div>
-    </div>
-  )
+    );
 }
 
 export default ProfilePage

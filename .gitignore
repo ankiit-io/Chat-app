@@ -1,4 +1,3 @@
-
 backend/mail/.env
 backend/mail/node_modules
 backend/mail/dist
@@ -7,4 +6,18 @@ backend/user/.env
 backend/user/node_modules
 backend/user/dist
 
+backend/chat/.env
+backend/chat/node_modules
+backend/chat/dist
 
+frontend/node_modules
+frontend/.next
+frontend/.env
+frontend/out
+
+*.log
+.vscode
+.DS_Store
+Thumbs.db
+
+*.pem
