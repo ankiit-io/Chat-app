@@ -11,7 +11,12 @@ connectDB();
 const port = process.env.PORT ;
 
 app.use(express.json());
-app.use(cors());
+app.use(
+  cors({
+    origin: ["http://localhost:3000", "http://13.232.91.51:3000"],
+    credentials: true,
+  }),
+);
 app.use("/api/v1", chatRoutes);
 
 
