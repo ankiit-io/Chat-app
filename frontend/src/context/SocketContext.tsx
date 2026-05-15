@@ -24,24 +24,28 @@ export const SocketProvider = ({children}:ProviderProps) => {
    const {user} = useAppData();
    const [onlineUsers, setOnlineUsers] = useState<string[]>([]);
 
-   useEffect(()=>{
-    if(!user?._id) return;
+   useEffect(() => {
+     if (!user?._id) return;
 
-    const newSocket = io(chat_Service,{
-        query:{userId: user._id}
-    })
+     const newSocket = io(chat_Service, {
+       transports: ["websocket"],
+       query: {
+         userId: user._id,
+       },
+     });
 
-    setSocket(newSocket);
+     setSocket(newSocket);
 
-    newSocket.on("getOnlineUser",(users:string[])=>{
-        setOnlineUsers(users);
-    });
+     newSocket.on("getOnlineUser", (users: string[]) => {
+       setOnlineUsers(users);
+     });
 
+     return () => {
+       newSocket.off("getOnlineUser");
+       newSocket.disconnect();
+     };
+   }, [user?._id]);
 
-    return () => {
-        newSocket.disconnect();
-    }
-   },[]);
    return <SocketContext.Provider value={{socket,onlineUsers}}>
     {children}
     

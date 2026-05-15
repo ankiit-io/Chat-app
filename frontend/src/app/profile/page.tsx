@@ -33,6 +33,7 @@ const ProfilePage = () => {
     toast.success("Name updated successfully");
     setUser(data.user);
     setisEdit(false);
+    window.location.reload();
     }
     catch(error:any){
     toast.error(error.response.data.message);
