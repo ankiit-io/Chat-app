@@ -41,7 +41,7 @@ export const SocketProvider = ({children}:ProviderProps) => {
     return () => {
         newSocket.disconnect();
     }
-   },[user?._id]);
+   },[]);
    return <SocketContext.Provider value={{socket,onlineUsers}}>
     {children}
     
