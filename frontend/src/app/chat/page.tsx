@@ -312,11 +312,42 @@ const app = () => {
       }
     });
 
+    socket?.on("profileUpdated", (updatedUser) => {
+      setChats((prev) => {
+        if (!prev) return prev;
+
+        return prev.map((chat) => {
+          if (chat.user._id === updatedUser._id) {
+            return {
+              ...chat,
+              user: {
+                ...chat.user,
+                name: updatedUser.name,
+              },
+            };
+          }
+
+          return chat;
+        });
+      });
+
+      if (user?._id === updatedUser._id) {
+        setUser((prev) =>
+          prev
+            ? {
+                ...prev,
+                name: updatedUser.name,
+              }
+            : prev,
+        );
+      }
+    });
+
     return () => {
       socket?.off("newMessage");
       socket?.off("messageSeen");
       socket?.off("userTyping");
-      socket?.off("userTyping");
+      socket?.off("profileUpdated");
     };
   }, [socket, selectedUser, setChats, loggedInUser]);
 

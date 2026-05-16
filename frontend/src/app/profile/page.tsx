@@ -7,11 +7,13 @@ import axios, { CanceledError } from 'axios';
 import { toast } from 'react-hot-toast';
 import Loading from '@/components/Loading';
 import { ArrowLeft, Cross, Save, User, UserCircle, X } from 'lucide-react';
+import { SocketData } from '@/context/SocketContext';
 const ProfilePage = () => {
     const {user,isAuth,loading,setUser} = useAppData();
     const [isEdit, setisEdit] = useState(false);
     const [name, setName] = useState<string | undefined>("");
     const router = useRouter();
+    const { socket } = SocketData();
     const editHandler =()=>{
         setisEdit(!isEdit);
         setName(user?.name);
@@ -30,10 +32,16 @@ const ProfilePage = () => {
             secure: false,
             path: "/",
         });
-    toast.success("Name updated successfully");
-    setUser(data.user);
-    setisEdit(false);
-    window.location.reload();
+   toast.success("Name updated successfully");
+
+   setUser(data.user);
+
+   socket?.emit("profileUpdated", {
+     _id: data.user._id,
+     name: data.user.name,
+   });
+
+   setisEdit(false);
     }
     catch(error:any){
     toast.error(error.response.data.message);

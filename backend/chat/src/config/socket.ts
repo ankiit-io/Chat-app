@@ -63,7 +63,9 @@ io.on("connection",(socket:Socket)=>{
         socket.leave(chatId);
     })
 
-
+    socket.on("profileUpdated", (updatedUser) => {
+      socket.broadcast.emit("profileUpdated", updatedUser);
+    });
 
 
     socket.on("disconnect",()=>{
