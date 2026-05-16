@@ -88,7 +88,7 @@ export const updatename = tryCatch(async (req: AuthenticatedRequest, res) => {
   user.name = req.body.name || user.name;
   await user.save();
 
-  const token = generateToken(user);
+  const token = generateToken(user._id);
 
   res.json({
     message: "Name updated successfully",
